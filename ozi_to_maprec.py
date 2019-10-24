@@ -38,7 +38,22 @@ def get_srs_as_proj4(ozi_datum_string, ozi_projection=None):
             ('+lon_0=', 'lon_origin'),
             ('+k=', 'k_factor'),
             ('+x_0=', 'false_easting'),
-            ('+y_0=', 'false_northing'))}
+            ('+y_0=', 'false_northing')),
+        'Lambert Conformal Conic': (
+            '+proj=lcc +units=m',
+            ('+lat_0=', 'lat_origin'),
+            ('+lon_0=', 'lon_origin'),
+            ('+lat_1=', 'lat1'),
+            ('+lat_2=', 'lat2'),
+        ),
+        'Mercator': (
+            '+proj=merc',
+            ('+lon_0=', 'lon_origin'),
+            ('+k=', 'k_factor'),
+            ('+x_0=', 'false_easting'),
+            ('+y_0=', 'false_northing'),
+        )
+    }
     try:
         srs = [datum_map[ozi_datum_string]]
     except KeyError as e:
