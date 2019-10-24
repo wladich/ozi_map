@@ -93,7 +93,10 @@ def convert_cutline(ozi_cutline):
 def get_maprecord_from_ozi_file(ozi_map_file):
     maprecord = {}
     ozi_map = ozi_reader.read_ozi_map(open(ozi_map_file))
-    maprecord['image_path'] = find_image_file(ozi_map.file_name, os.path.dirname(ozi_map_file) or '.')
+    try:
+        maprecord['image_path'] = find_image_file(ozi_map.file_name, os.path.dirname(ozi_map_file) or '.')
+    except Exception as e:
+        raise Exception('Error in "%s": %s' % (ozi_map_file, e))
     maprecord['srs'] = get_srs_as_proj4(ozi_map.datum, ozi_map.projection)
     maprecord['gcps'] = convert_gcps(ozi_map.gcps)
     maprecord['cutline'] = {
