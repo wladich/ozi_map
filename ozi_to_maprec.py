@@ -3,6 +3,7 @@ import argparse
 import os
 from ozi_map import ozi_reader
 from maprec import Maprecord
+import pyproj
 
 
 def find_image_file(ozi_image_filename, base_dir):
@@ -68,7 +69,9 @@ def get_srs_as_proj4(ozi_datum_string, ozi_projection=None):
     srs.append(proj_params[0])
     for proj_param, ozi_param in proj_params[1:]:
         try:
-            srs.append('%s%s' % (proj_param, ozi_projection.get(ozi_param)))
+            value = ozi_projection.get(ozi_param)
+            if value is not None:
+                srs.append('%s%s' % (proj_param, value))
         except KeyError:
             raise Exception('Projection parameters not fully defined')
     return ' '.join(srs)
@@ -90,7 +93,7 @@ def convert_cutline(ozi_cutline):
     return [{'x': x, 'y': y} for x, y in ozi_cutline]
 
 
-def get_maprecord_from_ozi_file(ozi_map_file):
+def get_maprecord_from_ozi_file(ozi_map_file, cutline_type='latlon'):
     maprecord = {}
     ozi_map = ozi_reader.read_ozi_map(open(ozi_map_file))
     try:
@@ -99,9 +102,25 @@ def get_maprecord_from_ozi_file(ozi_map_file):
         raise Exception('Error in "%s": %s' % (ozi_map_file, e))
     maprecord['srs'] = get_srs_as_proj4(ozi_map.datum, ozi_map.projection)
     maprecord['gcps'] = convert_gcps(ozi_map.gcps)
+
+    if cutline_type == 'raw':
+        cutline_srs = 'RAW'
+        cutline_points = ozi_map['cutline_pixels']
+    elif cutline_type == 'latlon':
+        cutline_srs = get_srs_as_proj4(ozi_map.datum)
+        cutline_points = ozi_map.cutline
+    elif cutline_type == 'proj':
+        proj_str = get_srs_as_proj4(ozi_map.datum, ozi_map.projection)
+        proj = pyproj.Proj(proj_str)
+        cutline_srs = proj_str
+        cutline_points = proj(*zip(*ozi_map.cutline))
+        cutline_points = zip(*cutline_points)
+    else:
+        raise Exception()
+
     maprecord['cutline'] = {
-        'srs': get_srs_as_proj4(ozi_map.datum),
-        'points': convert_cutline(ozi_map.cutline)
+        'srs': cutline_srs,
+        'points': convert_cutline(cutline_points)
         }
     return maprecord
 
@@ -111,12 +130,13 @@ def parse_command_line():
     parser.add_argument('in_file', metavar='ozi_file.map')
     parser.add_argument('out_file', metavar='output.maprec')
     parser.add_argument('--abs-path', action='store_true', help='Write absolute path to image file')
+    parser.add_argument('--cutline', required=False, choices=['raw', 'latlon', 'proj'], default='latlon')
     return parser.parse_args()
 
 
 def main():
     args = parse_command_line()
-    maprecord = get_maprecord_from_ozi_file(args.in_file)
+    maprecord = get_maprecord_from_ozi_file(args.in_file, args.cutline)
     maprecord = Maprecord(args.in_file, maprecord)
     maprecord.write(args.out_file, image_path_relative=not args.abs_path)
 
