@@ -6,7 +6,7 @@ class ValidationError(Exception):
 
 
 def validate_number(value):
-    assert isinstance(value, types.StringTypes)
+    assert isinstance(value, (str,))
     try:
         return int(value)
     except ValueError:
@@ -14,7 +14,7 @@ def validate_number(value):
 
 
 def validate_float(value):
-    assert isinstance(value, types.StringTypes)
+    assert isinstance(value, (str,))
     try:
         return float(value)
     except ValueError:
@@ -22,7 +22,7 @@ def validate_float(value):
 
 
 def validate_string_start(value, pattern):
-    assert isinstance(value, types.StringTypes)
+    assert isinstance(value, (str,))
     if not value.startswith(pattern):
         raise ValidationError(' does not start with "%s"' % (pattern[:50]))
     else:
@@ -30,7 +30,7 @@ def validate_string_start(value, pattern):
 
 
 def validate_value(value, pattern):
-    assert isinstance(value, types.StringTypes)
+    assert isinstance(value, (str,))
     if value != pattern:
         raise ValidationError('"%s" instead of "%s"' % (value[:50], pattern[:50]))
     else:
@@ -38,7 +38,7 @@ def validate_value(value, pattern):
 
 
 def validate_notempty(value):
-    assert isinstance(value, types.StringTypes)
+    assert isinstance(value, (str,))
     if value == '':
         raise ValidationError('String empty')
     else:
@@ -46,7 +46,7 @@ def validate_notempty(value):
 
 
 def validate_values(value, patterns):
-    assert isinstance(value, types.StringTypes)
+    assert isinstance(value, (str,))
     if value not in patterns:
         raise ValidationError('"%s" is not one of %s' % (value[:50], ', '.join(['"%s"' % s for s in patterns])))
     else:

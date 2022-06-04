@@ -113,8 +113,8 @@ def get_maprecord_from_ozi_file(ozi_map_file, cutline_type='latlon'):
         proj_str = get_srs_as_proj4(ozi_map.datum, ozi_map.projection)
         proj = pyproj.Proj(proj_str)
         cutline_srs = proj_str
-        cutline_points = proj(*zip(*ozi_map.cutline))
-        cutline_points = zip(*cutline_points)
+        cutline_points = proj(*list(zip(*ozi_map.cutline)))
+        cutline_points = list(zip(*cutline_points))
     else:
         raise Exception()
 

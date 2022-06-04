@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from attr_dict import AttrDict
-from validate import validate_number, validate_float, validate_notempty, validate_value, validate_values,\
+from .attr_dict import AttrDict
+from .validate import validate_number, validate_float, validate_notempty, validate_value, validate_values,\
     ValidationError, validate_string_start
 
 
@@ -72,7 +72,7 @@ def read_ozi_map(data):
                 ozi_map.projection.height = validate_float(proj_params[8])
 
         ozi_map.gcps = []
-        for i in xrange(1, 31):
+        for i in range(1, 31):
             ozi_gcp = fields(lines[i + 8], 17)
             with OziFormatError('line %d' % (i + 9)):
                 validate_value(ozi_gcp[0], 'Point%02d' % i)
@@ -126,5 +126,5 @@ def read_ozi_map(data):
 if __name__ == '__main__':
     import sys
     import pprint
-    print sys.argv[1]
+    print(sys.argv[1])
     pprint.pprint(read_ozi_map(open(sys.argv[1])))

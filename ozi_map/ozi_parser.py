@@ -1,11 +1,11 @@
 # Устаревший файл, преобразующий структуру из ozi_reader в более понятную структуру, которая использовалась
 # в каком-то старом проекте
 
-from attr_dict import AttrDict
+from .attr_dict import AttrDict
 from copy import deepcopy
 import os
 import pyproj
-import ozi_reader
+from . import ozi_reader
 from glob import glob
 import math
 __all__= ['parse_ozi_map']
@@ -50,9 +50,9 @@ def make_converter(s_srs, d_srs):
         if len(args) == 2 and isinstance(args[0], float) and isinstance(args[1], float):
             return pyproj.transform(proj_src, proj_dest, *args)
         elif len(args) == 1 and hasattr(args[0], '__len__'):
-            points = zip(*args[0])
+            points = list(zip(*args[0]))
             points = pyproj.transform(proj_src, proj_dest, *points)
-            return zip(*points)
+            return list(zip(*points))
         else:
             raise TypeError()
     return converter
