@@ -7,5 +7,8 @@ setup(
     author='Sergey Orlov',
     author_email='wladimirych@gmail.com',
     packages=find_packages(),
-    install_requires=['pyproj', 'maprec'],
+    install_requires=[
+        'pyproj',
+        'maprec @ git+https://github.com/wladich/maprec.git',
+    ],
 )
