@@ -95,7 +95,7 @@ def convert_cutline(ozi_cutline):
 
 def get_maprecord_from_ozi_file(ozi_map_file, cutline_type='latlon'):
     maprecord = {}
-    ozi_map = ozi_reader.read_ozi_map(open(ozi_map_file))
+    ozi_map = ozi_reader.read_ozi_map(open(ozi_map_file, 'rb'))
     try:
         maprecord['image_path'] = find_image_file(ozi_map.file_name, os.path.dirname(ozi_map_file) or '.')
     except Exception as e:

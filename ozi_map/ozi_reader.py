@@ -32,7 +32,7 @@ def fields(line, count):
 
 def read_ozi_map(data):
     if hasattr(data, 'read'):
-        data = data.read()
+        data = data.read().decode('cp1251')
     lines = data.splitlines()
     lines = [l.strip(' \n\r\x09') for l in lines]
     if not lines:
@@ -41,8 +41,8 @@ def read_ozi_map(data):
     try:
         with OziFormatError('line 1'):
             validate_string_start(lines[0], 'OziExplorer Map Data File Version 2.')
-        ozi_map.title = lines[1].decode('cp1251')
-        ozi_map.file_name = lines[2].decode('cp1251').split('\\')[-1]
+        ozi_map.title = lines[1]
+        ozi_map.file_name = lines[2].split('\\')[-1]
         with OziFormatError('line 5, datum name'):
             ozi_map.datum = validate_notempty(fields(lines[4], 1)[0])
         proj_params = fields(lines[8], 2)
