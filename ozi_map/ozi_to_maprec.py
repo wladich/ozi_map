@@ -131,6 +131,7 @@ def parse_command_line():
     parser.add_argument('out_file', metavar='output.maprec')
     parser.add_argument('--abs-path', action='store_true', help='Write absolute path to image file')
     parser.add_argument('--cutline', required=False, choices=['raw', 'latlon', 'proj'], default='latlon')
+    parser.add_argument('--json', action='store_true', default=False)
     return parser.parse_args()
 
 
@@ -138,7 +139,7 @@ def main():
     args = parse_command_line()
     maprecord = get_maprecord_from_ozi_file(args.in_file, args.cutline)
     maprecord = Maprecord(args.in_file, maprecord)
-    maprecord.write(args.out_file, image_path_relative=not args.abs_path)
+    maprecord.write(args.out_file, image_path_relative=not args.abs_path, format_json=args.json)
 
 
 if __name__ == '__main__':
