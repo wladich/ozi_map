@@ -22,7 +22,7 @@ def find_image_file(ozi_image_filename, base_dir):
 def get_srs_as_proj4(ozi_datum_string, ozi_projection=None):
     datums = {
         'wgs84': '+datum=WGS84',
-        'sk42': '+ellps=krass +towgs84=23.9,-141.3,-80.9,0,-0.37,-0.85,-0.12 +no_defs'
+        'sk42': '+ellps=krass +towgs84=23.57,-140.95,-79.8,0.0,0.35,0.79,-0.22 +no_defs' # EPSG:5044
         }
     datum_map = {
         # http://www.hemanavigator.com.au/Products/TopographicalGPS/OziExplorer/tabid/69/Default.aspx
